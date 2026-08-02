@@ -7,9 +7,17 @@
         <groupId>com.mohamed</groupId>
         <artifactId>order-domain</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>order-application-service</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.mohamed</groupId>
+            <artifactId>order-domain-core</artifactId>
+        </dependency>
+    </dependencies>
 
     <properties>
     </properties>

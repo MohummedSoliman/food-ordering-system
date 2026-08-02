@@ -12,7 +12,13 @@
     <artifactId>order-data-access</artifactId>
 
     <properties>
-
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.mohamed</groupId>
+            <artifactId>order-application-service</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

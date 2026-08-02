@@ -24,8 +24,36 @@
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
     </properties>
 
-    <dependencyManagement></dependencyManagement>
-    <dependencies></dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.mohamed</groupId>
+                <artifactId>order-domain-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mohamed</groupId>
+                <artifactId>order-application-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mohamed</groupId>
+                <artifactId>order-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mohamed</groupId>
+                <artifactId>order-data-access</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mohamed</groupId>
+                <artifactId>order-messaging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
