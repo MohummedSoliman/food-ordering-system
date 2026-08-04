@@ -1,11 +1,14 @@
 package com.mohamed.order.service.domain.entity;
 
 import com.mohamed.entity.AggregateRoot;
+import com.mohamed.order.service.domain.exception.OrderDomainException;
+import com.mohamed.order.service.domain.valueobject.OrderItemId;
 import com.mohamed.order.service.domain.valueobject.StreetAddress;
 import com.mohamed.order.service.domain.valueobject.TracingId;
 import com.mohamed.valueobject.*;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Order extends AggregateRoot<OrderId> {
     private final CustomerId customerId;
@@ -28,6 +31,56 @@ public class Order extends AggregateRoot<OrderId> {
         tracingId = builder.tracingId;
         orderStatus = builder.orderStatus;
         failureMessages = builder.failureMessages;
+    }
+
+    public void validateOrder() {
+        validateInitialOrder();
+        validateTotalPrice();
+        validateItemsPrice();
+    }
+
+    private void validateInitialOrder() {
+        if (orderStatus != null || super.getId() != null) {
+            throw new OrderDomainException("Order is not in correct state for initialization");
+        }
+    }
+
+    private void validateTotalPrice() {
+        if (price == null || !price.isGreaterThanZero()) {
+            throw new OrderDomainException("Total price must be greater than zero");
+        }
+    }
+
+    private void validateItemsPrice() {
+        Money orderItemsTotal = items.stream()
+                .map(orderItem -> {
+                    validateItemPrice(orderItem);
+                    return orderItem.getSubtotal();
+                }).reduce(Money.ZERO, Money::add);
+
+        if (!price.equals(orderItemsTotal)) {
+            throw new OrderDomainException("Total price: " + price.getAmount() + " is not equal to Order items total: " + orderItemsTotal.getAmount());
+        }
+    }
+
+    private void validateItemPrice(OrderItem orderItem) {
+        if (!orderItem.isPriceValid()) {
+            throw new OrderDomainException("Order item price must be greater than zero");
+        }
+    }
+
+    public void initializeOrder() {
+        setId(new OrderId(UUID.randomUUID()));
+        tracingId = new TracingId(UUID.randomUUID());
+        orderStatus = OrderStatus.PENDING;
+        initializeOrderItems();
+    }
+
+    private void initializeOrderItems() {
+        long itemId = 1;
+        for (OrderItem orderItem : items) {
+            orderItem.initializeOrderItem(super.getId(), new OrderItemId(itemId++));
+        }
     }
 
 

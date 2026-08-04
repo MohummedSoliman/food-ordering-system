@@ -1,4 +1,13 @@
 package com.mohamed.order.service.domain.exception;
 
-public class OrderDomainException {
+import com.mohamed.exception.DomainException;
+
+public class OrderDomainException extends DomainException {
+    public OrderDomainException(String message) {
+        super(message);
+    }
+
+    public OrderDomainException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
