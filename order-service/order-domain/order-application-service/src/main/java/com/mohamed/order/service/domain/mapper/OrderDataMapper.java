@@ -4,6 +4,7 @@ import com.mohamed.order.service.domain.dto.create.CreateOrderCommand;
 import com.mohamed.order.service.domain.dto.create.CreateOrderResponse;
 import com.mohamed.order.service.domain.dto.create.OrderAddress;
 import com.mohamed.order.service.domain.dto.create.OrderItem;
+import com.mohamed.order.service.domain.dto.track.TrackOrderResponse;
 import com.mohamed.order.service.domain.entity.Order;
 import com.mohamed.order.service.domain.entity.Product;
 import com.mohamed.order.service.domain.entity.Restaurant;
@@ -36,6 +37,14 @@ public class OrderDataMapper {
                 .orderTrackingId(order.getTracingId().getValue())
                 .orderStatus(order.getOrderStatus())
                 .build(); // Return the mapped CreateOrderResponse object
+    }
+
+    public TrackOrderResponse orderToTrackOrderResponse(Order order) {
+        return TrackOrderResponse.builder()
+                .orderTrackingId(order.getTracingId().getValue())
+                .orderStatus(order.getOrderStatus())
+                .failureMessages(order.getFailureMessages())
+                .build(); // Return the mapped TrackOrderResponse object
     }
 
     public Order createOrderCommandToOrder(CreateOrderCommand createOrderCommand) {
