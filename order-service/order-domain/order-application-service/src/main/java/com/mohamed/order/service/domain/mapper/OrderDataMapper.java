@@ -32,10 +32,11 @@ public class OrderDataMapper {
                 .build(); // Return the mapped Restaurant object
     }
 
-    public CreateOrderResponse orderToCreateOrderResponse(Order order) {
+    public CreateOrderResponse orderToCreateOrderResponse(Order order, String message) {
         return CreateOrderResponse.builder()
                 .orderTrackingId(order.getTracingId().getValue())
                 .orderStatus(order.getOrderStatus())
+                .message(message)
                 .build(); // Return the mapped CreateOrderResponse object
     }
 
