@@ -5,6 +5,13 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/infrastrcuture/kafka/kafka-config-data/pom.xml" />
+        <option value="$PROJECT_DIR$/infrastrcuture/pom.xml" />
+        <option value="$PROJECT_DIR$/infrastrcuture/kafka/kafka-consumer/pom.xml" />
+        <option value="$PROJECT_DIR$/infrastrcuture/kafka/kafka-producer/pom.xml" />
+        <option value="$PROJECT_DIR$/infrastructure/kafka/kafka-config-data/pom.xml" />
+        <option value="$PROJECT_DIR$/infrastructure/kafka/kafka-producer/pom.xml" />
+        <option value="$PROJECT_DIR$/infrastructure/kafka/kafka-consumer/pom.xml" />
       </list>
     </option>
   </component>
