@@ -7,6 +7,7 @@
         <groupId>com.mohamed</groupId>
         <artifactId>infrastructure</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>kafka</artifactId>
