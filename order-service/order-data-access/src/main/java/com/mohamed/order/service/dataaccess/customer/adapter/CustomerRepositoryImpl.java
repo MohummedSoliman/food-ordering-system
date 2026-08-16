@@ -1,6 +1,5 @@
 package com.mohamed.order.service.dataaccess.customer.adapter;
 
-import com.mohamed.order.service.dataaccess.customer.entity.CustomerEntity;
 import com.mohamed.order.service.dataaccess.customer.mapper.CustomerDataAccessMapper;
 import com.mohamed.order.service.dataaccess.customer.repository.CustomerJpaRepository;
 import com.mohamed.order.service.domain.entity.Customer;
