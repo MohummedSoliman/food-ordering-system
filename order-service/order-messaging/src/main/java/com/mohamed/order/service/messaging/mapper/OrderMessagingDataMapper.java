@@ -1,13 +1,14 @@
 package com.mohamed.order.service.messaging.mapper;
 
-import com.food.ordering.system.kafka.order.avro.model.PaymentOrderStatus;
-import com.food.ordering.system.kafka.order.avro.model.PaymentRequestAvroModel;
+import com.food.ordering.system.kafka.order.avro.model.*;
 import com.mohamed.order.service.domain.entity.Order;
 import com.mohamed.order.service.domain.event.OrderCancelledEvent;
 import com.mohamed.order.service.domain.event.OrderCreatedEvent;
+import com.mohamed.order.service.domain.event.OrderPaidEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class OrderMessagingDataMapper {
@@ -35,6 +36,26 @@ public class OrderMessagingDataMapper {
                 .setPrice(order.getPrice().getAmount())
                 .setCreatedAt(orderCancelledEvent.getCreatedAt().toInstant())
                 .setPaymentOrderStatus(PaymentOrderStatus.CANCELLED)
+                .build();
+    }
+
+    public RestaurantApprovalRequestAvroModel orderPaidEventToRestaurantApprovalRequestAvroModel(OrderPaidEvent orderPaidEvent) {
+        Order order = orderPaidEvent.getOrder();
+        return RestaurantApprovalRequestAvroModel.newBuilder()
+                .setId(UUID.randomUUID().toString())
+                .setSagaId("")
+                .setOrderId(order.getId().getValue().toString())
+                .setRestaurantId(order.getRestaurantId().getValue().toString())
+                .setRestaurantOrderStatus(RestaurantOrderStatus.PAID)
+                .setProducts(order.getItems().stream().map(orderItem ->
+                                Product.newBuilder()
+                                        .setId(orderItem.getId().getValue().toString())
+                                        .setQuantity(orderItem.getQuantity())
+                                        .build()
+                        )
+                        .collect(Collectors.toList()))
+                .setPrice(order.getPrice().getAmount())
+                .setCreatedAt(orderPaidEvent.getCreatedAt().toInstant())
                 .build();
     }
 }
