@@ -35,7 +35,7 @@ public class Payment extends AggregateRoot<PaymentId> {
         createdAt = ZonedDateTime.now(ZoneId.of("UTC"));
     }
 
-    public void validatePaymentMethod(List<String> failureMessages) {
+    public void validatePayment(List<String> failureMessages) {
         if (price == null || !price.isGreaterThanZero()) {
             failureMessages.add("Total must be greater than zero!");
         }
