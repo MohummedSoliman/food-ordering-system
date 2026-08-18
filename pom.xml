@@ -95,6 +95,11 @@
                 <artifactId>common-application</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.mohamed</groupId>
+                <artifactId>payment-domain-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
