@@ -6,6 +6,7 @@ import com.mohamed.order.service.domain.config.OrderServiceConfigData;
 import com.mohamed.order.service.domain.event.OrderPaidEvent;
 import com.mohamed.order.service.domain.ports.output.message.publisher.restaurantapproval.OrderPaidRestaurantRequestMessagePublisher;
 import com.mohamed.order.service.messaging.mapper.OrderMessagingDataMapper;
+import com.mohamed.kafka.producer.KafkaMessageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +17,12 @@ public class PayOrderKafkaMessagePublisher implements OrderPaidRestaurantRequest
     private final OrderServiceConfigData orderServiceConfigData;
     private final KafkaProducer<String, RestaurantApprovalRequestAvroModel> kafkaProducer;
     private final OrderMessagingDataMapper mapper;
-    private final OrderKafkaMessageHelper helper;
+    private final KafkaMessageHelper helper;
 
     public PayOrderKafkaMessagePublisher(OrderServiceConfigData orderServiceConfigData,
                                          KafkaProducer<String, RestaurantApprovalRequestAvroModel> kafkaProducer,
                                          OrderMessagingDataMapper mapper,
-                                         OrderKafkaMessageHelper helper) {
+                                         KafkaMessageHelper helper) {
         this.orderServiceConfigData = orderServiceConfigData;
         this.kafkaProducer = kafkaProducer;
         this.mapper = mapper;

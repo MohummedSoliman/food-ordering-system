@@ -6,12 +6,9 @@ import com.mohamed.order.service.domain.config.OrderServiceConfigData;
 import com.mohamed.order.service.domain.event.OrderCancelledEvent;
 import com.mohamed.order.service.domain.ports.output.message.publisher.payment.OrderCancelledPaymentRequestMessagePublisher;
 import com.mohamed.order.service.messaging.mapper.OrderMessagingDataMapper;
+import com.mohamed.kafka.producer.KafkaMessageHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.RecordMetadata;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
-
-import java.util.function.BiConsumer;
 
 @Slf4j
 @Component
@@ -20,12 +17,12 @@ public class CancelOrderKafkaMessagePublisher implements OrderCancelledPaymentRe
     private final OrderMessagingDataMapper mapper;
     private final OrderServiceConfigData orderServiceConfigData;
     private final KafkaProducer<String, PaymentRequestAvroModel> kafkaProducer;
-    private final OrderKafkaMessageHelper messageHelper;
+    private final KafkaMessageHelper messageHelper;
 
     public CancelOrderKafkaMessagePublisher(OrderMessagingDataMapper mapper,
                                             OrderServiceConfigData orderServiceConfigData,
                                             KafkaProducer<String, PaymentRequestAvroModel> kafkaProducer,
-                                            OrderKafkaMessageHelper messageHelper) {
+                                            KafkaMessageHelper messageHelper) {
         this.mapper = mapper;
         this.orderServiceConfigData = orderServiceConfigData;
         this.kafkaProducer = kafkaProducer;
