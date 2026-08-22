@@ -1,7 +1,7 @@
 package com.mohamed.order.service.dataaccess.restaurant.mapper;
 
-import com.mohamed.order.service.dataaccess.restaurant.entity.RestaurantEntity;
-import com.mohamed.order.service.dataaccess.restaurant.exception.RestaurantDataAccessException;
+import com.mohamed.dataaccess.restaurant.entity.RestaurantEntity;
+import com.mohamed.dataaccess.restaurant.exception.RestaurantDataAccessException;
 import com.mohamed.order.service.domain.entity.Product;
 import com.mohamed.order.service.domain.entity.Restaurant;
 import com.mohamed.valueobject.Money;

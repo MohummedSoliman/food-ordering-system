@@ -1,7 +1,7 @@
-package com.mohamed.order.service.dataaccess.restaurant.repository;
+package com.mohamed.dataaccess.restaurant.repository;
 
-import com.mohamed.order.service.dataaccess.restaurant.entity.RestaurantEntity;
-import com.mohamed.order.service.dataaccess.restaurant.entity.RestaurantEntityId;
+import com.mohamed.dataaccess.restaurant.entity.RestaurantEntity;
+import com.mohamed.dataaccess.restaurant.entity.RestaurantEntityId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
