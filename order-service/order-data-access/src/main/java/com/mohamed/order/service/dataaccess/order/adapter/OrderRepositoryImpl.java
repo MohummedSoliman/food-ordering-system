@@ -6,6 +6,7 @@ import com.mohamed.order.service.dataaccess.order.repository.OrderJpaRepository;
 import com.mohamed.order.service.domain.entity.Order;
 import com.mohamed.order.service.domain.ports.output.repository.OrderRepository;
 import com.mohamed.order.service.domain.valueobject.TracingId;
+import com.mohamed.valueobject.OrderId;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -27,6 +28,12 @@ public class OrderRepositoryImpl implements OrderRepository {
         OrderEntity orderEntity = this.mapper.orderToOrderEntity(order);
         OrderEntity savedOrderEntity = this.orderJpaRepository.save(orderEntity);
         return mapper.orderEntityToOrder(savedOrderEntity);
+    }
+
+    @Override
+    public Optional<Order> findById(OrderId orderId) {
+        return orderJpaRepository.findById(orderId.getValue())
+                .map(mapper::orderEntityToOrder);
     }
 
     @Override
