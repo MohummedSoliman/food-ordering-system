@@ -23,16 +23,16 @@ import java.util.UUID;
 public class OrderPaymentSage implements SagaStep<PaymentResponse, OrderPaidEvent, EmptyEvent> {
 
     private final OrderDomainService orderDomainService;
-    private final OrderRepository orderRepository;
+    private final OrderSagaHelper helper;
     private final OrderPaidRestaurantRequestMessagePublisher requestMessagePublisher;
 
     @Override
     @Transactional
     public OrderPaidEvent proces(PaymentResponse paymentResponse) {
         log.info("Completing payment for order id: {}", paymentResponse.getOrderId());
-        Order order = findOrder(paymentResponse.getOrderId());
+        Order order = helper.findOrder(paymentResponse.getOrderId());
         OrderPaidEvent orderPaidEvent = orderDomainService.payOrder(order, requestMessagePublisher);
-        orderRepository.save(order);
+        helper.saveOrder(order);
         log.info("Order with id : {} is paid", order.getId().getValue());
         return orderPaidEvent;
     }
@@ -41,19 +41,10 @@ public class OrderPaymentSage implements SagaStep<PaymentResponse, OrderPaidEven
     @Transactional
     public EmptyEvent rollback(PaymentResponse paymentResponse) {
         log.info("Cancelling order with id: {}", paymentResponse.getOrderId());
-        Order order = findOrder(paymentResponse.getOrderId());
+        Order order = helper.findOrder(paymentResponse.getOrderId());
         orderDomainService.cancelOrder(order, paymentResponse.getFailureMessages());
-        orderRepository.save(order);
+        helper.saveOrder(order);
         log.info("Order with id : {} is cancelled", paymentResponse.getOrderId());
         return EmptyEvent.INSTANCE;
-    }
-
-    private Order findOrder(String orderId) {
-        Optional<Order> orderResponse = orderRepository.findById(new OrderId(UUID.fromString(orderId)));
-        if (orderResponse.isEmpty()) {
-            log.error("Order with id : {} could not be found", orderId);
-            throw new OrderNotFoundException("Order with id : " + orderId + "could not be found");
-        }
-        return orderResponse.get();
     }
 }
