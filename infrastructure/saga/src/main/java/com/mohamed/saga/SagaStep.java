@@ -1,10 +1,8 @@
 package com.mohamed.saga;
 
-import com.mohamed.event.DomainEvent;
+public interface SagaStep<T> {
 
-public interface SagaStep<T, S extends DomainEvent, U extends DomainEvent> {
+    void proces(T data);
 
-    S proces(T data);
-
-    U rollback(T data);
+    void rollback(T data);
 }

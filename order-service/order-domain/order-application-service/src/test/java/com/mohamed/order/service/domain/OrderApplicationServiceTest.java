@@ -1,5 +1,6 @@
 package com.mohamed.order.service.domain;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mohamed.order.service.domain.dto.create.CreateOrderCommand;
 import com.mohamed.order.service.domain.dto.create.OrderAddress;
 import com.mohamed.order.service.domain.dto.create.OrderItem;
@@ -9,9 +10,7 @@ import com.mohamed.order.service.domain.entity.Product;
 import com.mohamed.order.service.domain.entity.Restaurant;
 import com.mohamed.order.service.domain.mapper.OrderDataMapper;
 import com.mohamed.order.service.domain.ports.input.service.OrderApplicationService;
-import com.mohamed.order.service.domain.ports.output.repository.CustomerRepository;
-import com.mohamed.order.service.domain.ports.output.repository.OrderRepository;
-import com.mohamed.order.service.domain.ports.output.repository.RestaurantRepository;
+import com.mohamed.order.service.domain.ports.output.repository.*;
 import com.mohamed.valueobject.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
@@ -48,13 +47,23 @@ public class OrderApplicationServiceTest {
     @Autowired
     private OrderDomainService orderDomainService;
 
+    @Autowired
+    private PaymentOutboxRepository paymentOutboxRepository;
+
+    @Autowired
+    private ApprovalOutboxRepository approvalOutboxRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private CreateOrderCommand createOrderCommand;
     private CreateOrderCommand createOrderCommandWrongPrice;
     private CreateOrderCommand createOrderCommandWrongProductPrice;
-    private final UUID CUSTOMER_ID = UUID.randomUUID();
-    private final UUID RESTAURANT_ID = UUID.randomUUID();
-    private final UUID PRODUCT_ID = UUID.randomUUID();
-    private final UUID ORDER_ID = UUID.randomUUID();
+    private final UUID CUSTOMER_ID = UUID.fromString("d215b5f8-0249-4dc5-89a3-51fd148cfb41");
+    private final UUID RESTAURANT_ID = UUID.fromString("d215b5f8-0249-4dc5-89a3-51fd148cfb45");
+    private final UUID PRODUCT_ID = UUID.fromString("d215b5f8-0249-4dc5-89a3-51fd148cfb48");
+    private final UUID ORDER_ID = UUID.fromString("15a497c1-0f4b-4eff-b9f4-c402c8c07afb");
+    private final UUID SAGA_ID = UUID.fromString("15a497c1-0f4b-4eff-b9f4-c402c8c07afa");
     private final BigDecimal PRICE = new BigDecimal("200.00");
 
 

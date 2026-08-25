@@ -1,8 +1,6 @@
 package com.mohamed.order.service.domain;
 
-import com.mohamed.event.EmptyEvent;
 import com.mohamed.order.service.domain.dto.message.PaymentResponse;
-import com.mohamed.order.service.domain.event.OrderPaidEvent;
 import com.mohamed.order.service.domain.ports.input.message.listener.payment.PaymentResponseMessageListener;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +18,8 @@ public class PaymentResponseMessageListenerImpl implements PaymentResponseMessag
 
     @Override
     public void paymentCompleted(PaymentResponse paymentResponse) {
-        OrderPaidEvent domainEvent = orderPaymentSage.proces(paymentResponse);
-        log.info("Publishing OrderPaidEvent for order id: {}", paymentResponse.getOrderId());
-        domainEvent.fire();
+        orderPaymentSage.proces(paymentResponse);
+        log.info("Order Payment Saga process operation is completed for order id: {}", paymentResponse.getOrderId());
     }
 
     @Override

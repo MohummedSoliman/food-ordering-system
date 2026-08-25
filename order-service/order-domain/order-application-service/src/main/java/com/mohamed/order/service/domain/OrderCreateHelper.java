@@ -1,6 +1,5 @@
 package com.mohamed.order.service.domain;
 
-import com.mohamed.event.publisher.DomainEventPublisher;
 import com.mohamed.order.service.domain.dto.create.CreateOrderCommand;
 import com.mohamed.order.service.domain.entity.Customer;
 import com.mohamed.order.service.domain.entity.Order;
@@ -8,7 +7,6 @@ import com.mohamed.order.service.domain.entity.Restaurant;
 import com.mohamed.order.service.domain.event.OrderCreatedEvent;
 import com.mohamed.order.service.domain.exception.OrderDomainException;
 import com.mohamed.order.service.domain.mapper.OrderDataMapper;
-import com.mohamed.order.service.domain.ports.output.message.publisher.payment.OrderCreatedPaymentRequestMessage;
 import com.mohamed.order.service.domain.ports.output.repository.CustomerRepository;
 import com.mohamed.order.service.domain.ports.output.repository.OrderRepository;
 import com.mohamed.order.service.domain.ports.output.repository.RestaurantRepository;
@@ -30,16 +28,13 @@ public class OrderCreateHelper {
     private final CustomerRepository customerRepository;
     private final RestaurantRepository restaurantRepository;
     private final OrderDataMapper orderDataMapper;
-    private final OrderCreatedPaymentRequestMessage orderCreatedEventDomainEventPublisher;
 
     @Transactional
     public OrderCreatedEvent persistOrder(CreateOrderCommand createOrderCommand) {
         checkCustomer(createOrderCommand.getCustomerId());
         Restaurant restaurant = checkRestaurant(createOrderCommand);
         Order order = orderDataMapper.createOrderCommandToOrder(createOrderCommand);// Map the command to an Order entity
-        OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order,
-                restaurant,
-                orderCreatedEventDomainEventPublisher);// Validate and initiate the order
+        OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order, restaurant);// Validate and initiate the order
         saveOrder(order);
         log.info("Order with id {} created successfully", order.getId().getValue());
         return orderCreatedEvent;
