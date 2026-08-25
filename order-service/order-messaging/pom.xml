@@ -31,6 +31,10 @@
             <groupId>com.mohamed</groupId>
             <artifactId>kafka-model</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.mohamed</groupId>
+            <artifactId>outbox</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

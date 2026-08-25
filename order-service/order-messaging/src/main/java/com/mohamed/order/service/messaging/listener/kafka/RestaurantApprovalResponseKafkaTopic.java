@@ -38,16 +38,21 @@ public class RestaurantApprovalResponseKafkaTopic implements KafkaConsumer<Resta
                 messages.size(), keys.toString(), partitions.toString(), offsets.toString());
 
         messages.forEach(restaurantApprovalResponseAvroModel -> {
-            if (OrderApprovalStatus.APPROVED == restaurantApprovalResponseAvroModel.getOrderApprovalStatus()) {
-                log.info("Processing approved order for order id: {}", restaurantApprovalResponseAvroModel.getOrderId());
-                responseListener.orderApproved(
-                        mapper.restaurantApprovalResponseArvoToRestaurantApprovalResponse(restaurantApprovalResponseAvroModel)
-                );
-            } else if (OrderApprovalStatus.REJECTED == restaurantApprovalResponseAvroModel.getOrderApprovalStatus()) {
-                log.info("Processing rejected order  for order id: {}", restaurantApprovalResponseAvroModel.getOrderId());
-                responseListener.orderRejected(
-                        mapper.restaurantApprovalResponseArvoToRestaurantApprovalResponse(restaurantApprovalResponseAvroModel)
-                );
+            try {
+                if (OrderApprovalStatus.APPROVED == restaurantApprovalResponseAvroModel.getOrderApprovalStatus()) {
+                    log.info("Processing approved order for order id: {}", restaurantApprovalResponseAvroModel.getOrderId());
+                    responseListener.orderApproved(
+                            mapper.restaurantApprovalResponseArvoToRestaurantApprovalResponse(restaurantApprovalResponseAvroModel)
+                    );
+                } else if (OrderApprovalStatus.REJECTED == restaurantApprovalResponseAvroModel.getOrderApprovalStatus()) {
+                    log.info("Processing rejected order  for order id: {}", restaurantApprovalResponseAvroModel.getOrderId());
+                    responseListener.orderRejected(
+                            mapper.restaurantApprovalResponseArvoToRestaurantApprovalResponse(restaurantApprovalResponseAvroModel)
+                    );
+                }
+            } catch (Exception e) {
+                log.error("Caught Optimistic locking exception in RestaurantApprovalResponseKafkaTopic " +
+                        "for order id: {}", restaurantApprovalResponseAvroModel.getOrderId());
             }
         });
     }

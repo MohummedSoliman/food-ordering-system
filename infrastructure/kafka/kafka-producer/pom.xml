@@ -15,6 +15,10 @@
     <dependencies>
         <dependency>
             <groupId>com.mohamed</groupId>
+            <artifactId>outbox</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mohamed</groupId>
             <artifactId>kafka-config-data</artifactId>
         </dependency>
         <dependency>

@@ -133,6 +133,11 @@
             </dependency>
             <dependency>
                 <groupId>com.mohamed</groupId>
+                <artifactId>outbox</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mohamed</groupId>
                 <artifactId>restaurant-dataaccess</artifactId>
                 <version>${project.version}</version>
             </dependency>
