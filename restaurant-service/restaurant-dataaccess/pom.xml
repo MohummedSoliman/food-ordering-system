@@ -28,6 +28,18 @@
             <groupId>com.mohamed</groupId>
             <artifactId>common-dataaccess</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.mohamed</groupId>
+            <artifactId>outbox</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mohamed</groupId>
+            <artifactId>payment-application-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mohamed</groupId>
+            <artifactId>kafka-producer</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
