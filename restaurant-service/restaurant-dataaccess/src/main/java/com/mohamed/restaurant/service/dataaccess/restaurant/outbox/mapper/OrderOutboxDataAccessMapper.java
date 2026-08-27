@@ -1,7 +1,7 @@
 package com.mohamed.restaurant.service.dataaccess.restaurant.outbox.mapper;
 
-import com.mohamed.payment.service.domain.outbox.model.OrderOutboxMessage;
 import com.mohamed.restaurant.service.dataaccess.restaurant.outbox.entity.OrderOutboxEntity;
+import com.mohamed.restaurant.service.domain.outbox.model.OrderOutboxMessage;
 import org.springframework.stereotype.Component;
 
 @Component

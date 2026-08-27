@@ -1,12 +1,14 @@
 package com.mohamed.restaurant.service.domain;
 
+import com.mohamed.outbox.OutboxStatus;
 import com.mohamed.restaurant.service.domain.dto.RestaurantApprovalReqeust;
 import com.mohamed.restaurant.service.domain.entity.Restaurant;
 import com.mohamed.restaurant.service.domain.event.OrderApprovalEvent;
 import com.mohamed.restaurant.service.domain.exception.RestaurantNotFoundException;
 import com.mohamed.restaurant.service.domain.mapper.RestaurantDataMapper;
-import com.mohamed.restaurant.service.domain.ports.output.message.publisher.OrderApprovedMessagePublisher;
-import com.mohamed.restaurant.service.domain.ports.output.message.publisher.OrderRejectedMessagePublisher;
+import com.mohamed.restaurant.service.domain.outbox.model.OrderOutboxMessage;
+import com.mohamed.restaurant.service.domain.outbox.scheduler.OrderOutboxHelper;
+import com.mohamed.restaurant.service.domain.ports.output.message.publisher.RestaurantApprovalResponseMessagePublisher;
 import com.mohamed.restaurant.service.domain.ports.output.repository.OrderApprovalRepository;
 import com.mohamed.restaurant.service.domain.ports.output.repository.RestaurantRepository;
 import com.mohamed.valueobject.RestaurantId;
@@ -29,20 +31,32 @@ public class RestaurantApprovalRequestHelper {
     private final RestaurantDataMapper mapper;
     private final RestaurantRepository restaurantRepository;
     private final OrderApprovalRepository orderApprovalRepository;
-    private final OrderApprovedMessagePublisher orderApprovedMessagePublisher;
-    private final OrderRejectedMessagePublisher orderRejectedMessagePublisher;
+    private final OrderOutboxHelper helper;
+    private final RestaurantApprovalResponseMessagePublisher publisher;
 
     @Transactional
-    public OrderApprovalEvent persistOrderApproval(RestaurantApprovalReqeust restaurantApprovalReqeust) {
+    public void persistOrderApproval(RestaurantApprovalReqeust restaurantApprovalReqeust) {
+
+        if (publishIfOutboxMessageProcessed(restaurantApprovalReqeust)) {
+            log.info("An outbox message with saga id: {} already saved to database!",
+                    restaurantApprovalReqeust.getSagaId());
+            return;
+        }
+
         log.info("Processing restaurant approval for order id: {} ", restaurantApprovalReqeust.getOrderId());
         List<String> failureMessages = new ArrayList<>();
         Restaurant restaurant = findRestaurant(restaurantApprovalReqeust);
         OrderApprovalEvent orderApprovalEvent = restaurantDomainService.validateOrder(
-                restaurant, failureMessages,
-                orderApprovedMessagePublisher, orderRejectedMessagePublisher
+                restaurant, failureMessages
         );
         orderApprovalRepository.save(restaurant.getOrderApproval());
-        return orderApprovalEvent;
+
+        helper
+                .saveOrderOutboxMessage(mapper.orderApprovalEventToOrderEventPayload(orderApprovalEvent),
+                        orderApprovalEvent.getOrderApproval().getOrderApprovalStatus(),
+                        OutboxStatus.STARTED,
+                        UUID.fromString(restaurantApprovalReqeust.getSagaId()));
+
     }
 
     private Restaurant findRestaurant(RestaurantApprovalReqeust restaurantApprovalReqeust) {
@@ -65,5 +79,19 @@ public class RestaurantApprovalRequestHelper {
         });
         restaurant.setId(new RestaurantId(UUID.fromString(restaurantApprovalReqeust.getOrderId())));
         return restaurant;
+    }
+
+    private boolean publishIfOutboxMessageProcessed(RestaurantApprovalReqeust restaurantApprovalRequest) {
+        Optional<OrderOutboxMessage> orderOutboxMessage =
+                helper.getCompletedOrderOutboxMessageBySagaIdAndOutboxStatus(
+                        UUID.fromString(restaurantApprovalRequest.getSagaId()),
+                        OutboxStatus.COMPLETED
+                );
+
+        if (orderOutboxMessage.isPresent()) {
+            publisher.publish(orderOutboxMessage.get(), helper::updateOutboxStatus);
+            return true;
+        }
+        return false;
     }
 }

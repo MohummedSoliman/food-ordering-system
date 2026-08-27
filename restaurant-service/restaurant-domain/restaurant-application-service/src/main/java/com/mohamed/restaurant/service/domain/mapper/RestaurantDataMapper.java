@@ -4,6 +4,8 @@ import com.mohamed.restaurant.service.domain.dto.RestaurantApprovalReqeust;
 import com.mohamed.restaurant.service.domain.entity.OrderDetail;
 import com.mohamed.restaurant.service.domain.entity.Product;
 import com.mohamed.restaurant.service.domain.entity.Restaurant;
+import com.mohamed.restaurant.service.domain.event.OrderApprovalEvent;
+import com.mohamed.restaurant.service.domain.outbox.model.OrderEventPayload;
 import com.mohamed.valueobject.Money;
 import com.mohamed.valueobject.OrderId;
 import com.mohamed.valueobject.OrderStatus;
@@ -31,6 +33,17 @@ public class RestaurantDataMapper {
                         .totalAmount(new Money(restaurantApprovalReqeust.getPrice()))
                         .orderStatus(OrderStatus.valueOf(restaurantApprovalReqeust.getRestaurantOrderStatus().name()))
                         .build())
+                .build();
+    }
+
+    public OrderEventPayload
+    orderApprovalEventToOrderEventPayload(OrderApprovalEvent orderApprovalEvent) {
+        return OrderEventPayload.builder()
+                .orderId(orderApprovalEvent.getOrderApproval().getOrderId().getValue().toString())
+                .restaurantId(orderApprovalEvent.getRestaurantId().getValue().toString())
+                .orderApprovalStatus(orderApprovalEvent.getOrderApproval().getOrderApprovalStatus().name())
+                .createdAt(orderApprovalEvent.getCreatedAt())
+                .failureMessage(orderApprovalEvent.getFailureMessages())
                 .build();
     }
 }

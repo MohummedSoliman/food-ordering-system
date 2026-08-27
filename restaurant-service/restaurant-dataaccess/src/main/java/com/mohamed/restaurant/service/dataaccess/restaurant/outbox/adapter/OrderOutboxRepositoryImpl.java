@@ -3,12 +3,12 @@ package com.mohamed.restaurant.service.dataaccess.restaurant.outbox.adapter;
 import com.food.ordering.system.kafka.order.avro.model.RestaurantApprovalResponseAvroModel;
 import com.mohamed.kafka.producer.service.KafkaProducer;
 import com.mohamed.outbox.OutboxStatus;
-import com.mohamed.payment.service.domain.outbox.model.OrderOutboxMessage;
-import com.mohamed.payment.service.domain.ports.output.repository.OrderOutboxRepository;
 import com.mohamed.restaurant.service.dataaccess.restaurant.outbox.entity.OrderOutboxEntity;
 import com.mohamed.restaurant.service.dataaccess.restaurant.outbox.exception.OrderOutboxNotFoundException;
 import com.mohamed.restaurant.service.dataaccess.restaurant.outbox.mapper.OrderOutboxDataAccessMapper;
 import com.mohamed.restaurant.service.dataaccess.restaurant.outbox.repository.OrderOutboxJpaRepository;
+import com.mohamed.restaurant.service.domain.outbox.model.OrderOutboxMessage;
+import com.mohamed.restaurant.service.domain.ports.output.repository.OrderOutboxRepository;
 import com.mohamed.valueobject.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,13 +47,11 @@ public class OrderOutboxRepositoryImpl implements OrderOutboxRepository {
     }
 
     @Override
-    public Optional<OrderOutboxMessage> findByTypeAndSagaIdAndPaymentStatusAndOutboxStatus(
-            String type, UUID sageId, PaymentStatus paymentStatus, OutboxStatus outboxStatus) {
-
-        return orderOutboxJpaRepository.findByTypeAndSagaIdAndOutboxStatus(type, sageId, outboxStatus)
+    public Optional<OrderOutboxMessage> findByTypeAndSagaIdAndOutboxStatus(String type, UUID sagaId, OutboxStatus outboxStatus) {
+        return orderOutboxJpaRepository.findByTypeAndSagaIdAndOutboxStatus(type, sagaId, outboxStatus)
                 .map(mapper::orderOutboxEntityToOrderOutboxMessage);
-
     }
+
 
     @Override
     public void deleteByTypeAndOutboxStatus(String type, OutboxStatus outboxStatus) {
