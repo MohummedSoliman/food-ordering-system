@@ -4,7 +4,9 @@ import com.mohamed.order.service.domain.dto.create.CreateOrderCommand;
 import com.mohamed.order.service.domain.dto.create.CreateOrderResponse;
 import com.mohamed.order.service.domain.dto.create.OrderAddress;
 import com.mohamed.order.service.domain.dto.create.OrderItem;
+import com.mohamed.order.service.domain.dto.message.CustomerModel;
 import com.mohamed.order.service.domain.dto.track.TrackOrderResponse;
+import com.mohamed.order.service.domain.entity.Customer;
 import com.mohamed.order.service.domain.entity.Order;
 import com.mohamed.order.service.domain.entity.Product;
 import com.mohamed.order.service.domain.entity.Restaurant;
@@ -88,6 +90,15 @@ public class OrderDataMapper {
                                         .build())
                         .toList())
                 .build();
+    }
+
+    public Customer customerModelToCustomer(CustomerModel customerModel) {
+        return new Customer(
+                new CustomerId(UUID.fromString(customerModel.getId())),
+                customerModel.getUsername(),
+                customerModel.getFirstName(),
+                customerModel.getLastName()
+        );
     }
 
     public OrderPaymentEventPayload orderCancelledEventToorderPaymentEventPayload(OrderCancelledEvent orderCancelledEvent) {
